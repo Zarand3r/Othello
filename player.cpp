@@ -68,18 +68,21 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         // of board class to see if the move is possible, calculate score, and 
         // then pick the move that is the best score.
         int best = -100;
-        Move bestmove; 
+        bestx;
+        besty 
         for (int x = 0; x < 7; x++)    {
             for (int y = 0; y < 7; y++) {
                 Move m(x, y);
                 score = score(&m);
                 if (board->checkMove(&m, side) && score > best)  {
                     best = score;
-                    bestmove = m;  
+                    bestx = m->getX;
+                    besty = m->getY;  
                 }
             }
         }
-        return &bestmove;
+        Move *bestmove = new Move(bestx, besty);
+        return bestmove;
         // A more efficient way would be to look at the stones we have, and explore
         // in all four directions. If there is a stone of the other side next to our stone,
         // we keep moving in the direction, until we find an empty square.
