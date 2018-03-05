@@ -43,7 +43,7 @@ Player::~Player() {
  */
 
 // Heuristic function, only meant to beat the simpleplayer
-int Player::simpleScore(Move m)  {
+int Player::score(Move *m)  {
     Board copy = board->copy();
     copy.set(side, m->x, m->y);
     int score = copy->getScore();
@@ -67,7 +67,19 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         // We could iterate through all the empty squares, use the checkmove method
         // of board class to see if the move is possible, calculate score, and 
         // then pick the move that is the best score.
-
+        int best = -100;
+        Move bestmove; 
+        for (int x = 0; x < 7; x++)    {
+            for (int y = 0; y < 7; y++) {
+                Move m(x, y);
+                score = score(&m);
+                if (board->checkMove(&m, side) && score > best)  {
+                    best = score;
+                    bestmove = m;  
+                }
+            }
+        }
+        return &bestmove;
         // A more efficient way would be to look at the stones we have, and explore
         // in all four directions. If there is a stone of the other side next to our stone,
         // we keep moving in the direction, until we find an empty square.
