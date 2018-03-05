@@ -178,3 +178,17 @@ void Board::setBoard(char data[]) {
         }
     }
 }
+
+int Board::getScore(Side side) {
+    // To calculate score, access the black bitset initialized in board.hpp
+    // The black bitset has 64 elements [0 to 63], each representing a square
+    // It is true or false depending on whether that square is black or not.  
+    int blacknum = black.count();
+    int whitenum = countWhite(); 
+    if (side == BLACK)  {
+        return = blacknum - whitenum;
+    }
+    else    {
+        return = whitenum - blacknum;
+    }    
+}
