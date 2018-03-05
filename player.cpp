@@ -82,7 +82,9 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             }
         }
         Move *bestmove = new Move(bestx, besty);
-        return bestmove;
+        return bestmove; //need to delete this wherever it is used
+
+        // Possible implementation for the minmax tree:
         // A more efficient way would be to look at the stones we have, and explore
         // in all four directions. If there is a stone of the other side next to our stone,
         // we keep moving in the direction, until we find an empty square.
