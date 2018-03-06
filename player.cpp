@@ -45,14 +45,34 @@ int Player::score(Move *m)  {
     Board *copy = board->copy();
     copy->doMove(m, side);
     int score = copy->getScore(side);
-    // if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
-    //     score += 3;
-    // }
-    // else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
-    //     score -= 3; 
-    // }
+    if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
+        score += 10;
+    }
+    else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
+        score -= 10; 
+    }
     delete copy;
     return score; 
+}
+
+Move *Player::randomMove(Move *opponentsMove)   {
+    board -> doMove(opponentsMove, other);
+    Move *m = new Move(0, 0);
+    if (board -> hasMoves(side))    {
+        while (true)  {
+            int x = rand()%8;
+            int y = rand()%8;
+            m->setX(x);
+            m->setY(y);
+            if (board -> checkMove(m, side))    {
+                break;
+            }
+        }
+        board -> doMove(m, side);
+        return  m;
+    }
+    delete m;
+    return nullptr;
 }
 
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
@@ -60,6 +80,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's move before calculating your own move
      */
+    //return randomMove(opponentsMove);
     board->doMove(opponentsMove, other);
     if (board->hasMoves(side))    {
         int best = -100;
@@ -80,6 +101,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             }
         }
         delete temp;
+        board -> doMove(bestMove, side);
         return bestMove; //need to delete this wherever it is used
         // Possible implementation for the minmax tree:
         // A more efficient way would be to look at the stones we have, and explore
