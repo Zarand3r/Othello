@@ -186,9 +186,9 @@ int Board::getScore(Side side) {
     int blacknum = black.count();
     int whitenum = countWhite(); 
     if (side == BLACK)  {
-        return = blacknum - whitenum;
+        return blacknum - whitenum;
     }
     else    {
-        return = whitenum - blacknum;
+        return whitenum - blacknum;
     }    
 }

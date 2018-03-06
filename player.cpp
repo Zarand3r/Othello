@@ -17,8 +17,6 @@ Player::Player(Side s) {
     side = s; 
     other = (s == BLACK) ? WHITE : BLACK;
     board = new Board();
-    board->set(s, 3, 3);
-    board->set(s, 4, 4);
 }
 
 /*
@@ -44,13 +42,13 @@ Player::~Player() {
 
 // Heuristic function, only meant to beat the simpleplayer
 int Player::score(Move *m)  {
-    Board copy = board->copy();
-    copy.set(side, m->x, m->y);
-    int score = copy->getScore();
-    if ((m->getX == 0) || (m->getX == 7) && (m->getY == 0) || (m->getY == 7))   {
+    Board *copy = board->copy();
+    copy->doMove(m, side);
+    int score = copy->getScore(side);
+    if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
         score += 3;
     }
-    else if ((m->getX == 1) || (m->getX == 6) && (m->getY == 1) || (m->getY == 6))  {
+    else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
         score -= 3; 
     }
     delete copy;
@@ -62,22 +60,22 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's move before calculating your own move
      */
-    board.set(other, opponentsMove->getX(), opponentsMove->getY());
-    if (board.hasMoves(side))    {
+    board->doMove(opponentsMove, other);
+    if (board->hasMoves(side))    {
         // We could iterate through all the empty squares, use the checkmove method
         // of board class to see if the move is possible, calculate score, and 
         // then pick the move that is the best score.
         int best = -100;
-        bestx;
-        besty 
-        for (int x = 0; x < 7; x++)    {
-            for (int y = 0; y < 7; y++) {
+        int bestx;
+        int besty; 
+        for (int x = 0; x < 8; x++)    {
+            for (int y = 0; y < 8; y++) {
                 Move m(x, y);
-                score = score(&m);
+                int score = this->score(&m);
                 if (board->checkMove(&m, side) && score > best)  {
                     best = score;
-                    bestx = m->getX;
-                    besty = m->getY;  
+                    bestx = m.getX();
+                    besty = m.getY();  
                 }
             }
         }
