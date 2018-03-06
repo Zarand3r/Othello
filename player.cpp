@@ -55,9 +55,6 @@ int Player::score(Move *m)  {
     return score; 
 }
 
-vector<Move*> Player::getValidMoves()   {
-    
-}
 
 Move *Player::randomMove(Move *opponentsMove)   {
     board -> doMove(opponentsMove, other);
@@ -106,19 +103,93 @@ Move *Player::greedyMove(Move *opponentsMove)   {
     return nullptr;
 }
 
-Board *miniMax(Board *board, int counter)    {
-    if (counter == 0)   {
-        return board;
+int Player::minimax(Move* m, int depth, bool maximizingPlayer){
+    if (depth == 0){
+        return this->score(m);
     }
-    vector<Move*> m = getValidMoves();
+
+    int best;
+    Board * copy = board->copy();
+
+    //unnecessary unless tree is deeper than 2-ply, as this part is done in doMinimax
+    if (maximizingPlayer){
+        board->doMove(m, other);
+        if (board->hasMoves(side)){
+            best = -1000;
+            Move *temp = new Move(0, 0);
+            for (int x = 0; x < 8; x++)    {
+                for (int y = 0; y < 8; y++) {
+                    temp->setX(x);
+                    temp->setY(y);
+                    if (board->checkMove(temp, side)){
+                        int score = this->minimax(temp, depth-1, false);
+                        best = max(best, score);
+                    }
+                }
+            }
+            board = copy;
+            delete copy;
+            return best;
+        }
+    }
+
+    else{
+        board->doMove(m, side);
+        if (board->hasMoves(other)){
+            best = 1000;
+            Move *temp = new Move(0, 0);
+            for (int x = 0; x < 8; x++)    {
+                for (int y = 0; y < 8; y++) {
+                    temp->setX(x);
+                    temp->setY(y);
+                    if (board->checkMove(temp, other)){
+                        int score = this->minimax(temp, depth-1, true);
+                        best = min(best, score);
+                    }
+                }
+            }
+            board = copy;
+            return best;
+        }
+    }
+    return this->score(m);
 }
+
+Move *Player::doMinimax(Move *opponentsMove, int msLeft){
+    board->doMove(opponentsMove, other);
+    if (board->hasMoves(side)){
+        int best = -1000;
+        Move *temp = new Move(0, 0);
+        Move *bestMove = new Move(0, 0);
+        for (int x = 0; x < 8; x++){
+            for (int y = 0; y < 8; y++) {
+                temp->setX(x);
+                temp->setY(y);
+                if (board->checkMove(temp, side)){
+                    int score = this->minimax(temp, 1, false);
+                    if (score > best)  {
+                        best = score;
+                        bestMove->setX(x);
+                        bestMove->setY(y);
+                    }
+                }
+            }
+        }
+        delete temp;
+        board -> doMove(bestMove, side);
+        return bestMove;
+    }
+    return nullptr;
+}
+
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /*
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's move before calculating your own move
      */
     //return randomMove(opponentsMove);
-    return greedyMove(opponentsMove);
+    //return greedyMove(opponentsMove);
+    return doMinimax(opponentsMove, msLeft);
     
         // Possible implementation for the minmax tree:
         // A more efficient way would be to look at the stones we have, and explore
