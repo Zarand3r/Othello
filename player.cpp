@@ -1,5 +1,7 @@
 #include "player.hpp"
 
+using namespace std;
+
 /*
  * Constructor for the player; initialize everything here. The side your AI is
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
@@ -75,12 +77,91 @@ Move *Player::randomMove(Move *opponentsMove)   {
     return nullptr;
 }
 
+int Player::minimax(Move* m, int depth, bool maximizingPlayer){
+    if (depth == 0){
+        return this->score(m);
+    }
+
+    int best;
+    Board * copy = board->copy();
+
+    //unnecessary unless tree is deeper than 2-ply, as this part is done in doMinimax
+    if (maximizingPlayer){
+        board->doMove(m, other);
+        if (board->hasMoves(side)){
+            best = -1000;
+            Move *temp = new Move(0, 0);
+            for (int x = 0; x < 8; x++)    {
+                for (int y = 0; y < 8; y++) {
+                    temp->setX(x);
+                    temp->setY(y);
+                    if (board->checkMove(temp, side)){
+                        int score = this->minimax(temp, depth-1, false);
+                        best = max(best, score);
+                    }
+                }
+            }
+            board = copy;
+            return best;
+        }
+    }
+
+    else{
+        board->doMove(m, side);
+        if (board->hasMoves(other)){
+            best = 1000;
+            Move *temp = new Move(0, 0);
+            for (int x = 0; x < 8; x++)    {
+                for (int y = 0; y < 8; y++) {
+                    temp->setX(x);
+                    temp->setY(y);
+                    if (board->checkMove(temp, other)){
+                        int score = this->minimax(temp, depth-1, true);
+                        best = min(best, score);
+                    }
+                }
+            }
+            board = copy;
+            return best;
+        }
+    }
+    return this->score(m);
+}
+
+Move *  Player::doMinimax(Move *opponentsMove, int msLeft){
+    board->doMove(opponentsMove, other);
+    if (board->hasMoves(side)){
+        int best = -1000;
+        Move *temp = new Move(0, 0);
+        Move *bestMove = new Move(0, 0);
+        for (int x = 0; x < 8; x++){
+            for (int y = 0; y < 8; y++) {
+                temp->setX(x);
+                temp->setY(y);
+                if (board->checkMove(temp, side)){
+                    int score = this->minimax(temp, 1, false);
+                    if (score > best)  {
+                        best = score;
+                        bestMove->setX(x);
+                        bestMove->setY(y);
+                    }
+                }
+            }
+        }
+        delete temp;
+        board -> doMove(bestMove, side);
+        return bestMove;
+    }
+    return nullptr;
+}
+
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /*
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's move before calculating your own move
      */
     //return randomMove(opponentsMove);
+    return doMinimax(opponentsMove, msLeft);
     board->doMove(opponentsMove, other);
     if (board->hasMoves(side))    {
         int best = -100;
