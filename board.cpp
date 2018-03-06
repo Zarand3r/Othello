@@ -184,7 +184,155 @@ int Board::getScore(Side side) {
     // The black bitset has 64 elements [0 to 63], each representing a square
     // It is true or false depending on whether that square is black or not.  
     int blacknum = black.count();
-    int whitenum = countWhite(); 
+    int whitenum = countWhite();
+    if (taken[0] == 1){
+        if (black [0] == 1){
+            blacknum += 2;
+        }
+        else whitenum += 2;
+    }
+
+    if (taken[7] == 1){
+        if (black [7] == 1){
+            blacknum += 2;
+        }
+        else whitenum += 2;
+    }
+
+    if (taken[56] == 1){
+        if (black [56] == 1){
+            blacknum += 2;
+        }
+        else whitenum += 2;
+    }
+
+    if (taken[63] == 1){
+        if (black [63] == 1){
+            blacknum += 2;
+        }
+        else whitenum += 2;
+    }
+
+    if (taken[1] == 1){
+        if (black[1] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[6] == 1){
+        if (black[6] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[8] == 1){
+        if (black[8] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[15] == 1){
+        if (black[15] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[48] == 1){
+        if (black[6] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[55] == 1){
+        if (black[6] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[57] == 1){
+        if (black[6] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[62] == 1){
+        if (black[6] == 1){
+            blacknum -= 3;
+        }
+        else whitenum -= 3;
+    }
+
+    if (taken[9] == 1){
+        if (black[9] == 1){
+            blacknum -= 4;
+        }
+        else whitenum -= 4;
+    }
+
+    if (taken[14] == 1){
+        if (black[14] == 1){
+            blacknum -= 4;
+        }
+        else whitenum -= 4;
+    }
+
+    if (taken[49] == 1){
+        if (black[49] == 1){
+            blacknum -= 4;
+        }
+        else whitenum -= 4;
+    }
+
+    if (taken[54] == 1){
+        if (black[54] == 1){
+            blacknum -= 4;
+        }
+        else whitenum -= 4;
+    }
+
+    for (int i = 2; i < 6; i++){
+        if (taken[i] == 1){
+            if (black[i] == 1){
+                blacknum += 1;
+            }
+            else whitenum += 1;
+        }
+    }
+
+    for (int i = 58; i < 62; i++){
+        if (taken[i] == 1){
+            if (black[i] == 1){
+                blacknum += 1;
+            }
+            else whitenum += 1;
+        }
+    }
+
+    for (int i = 2; i < 6; i++){
+        if (taken[i*8] == 1){
+            if (black[i*8] == 1){
+                blacknum += 1;
+            }
+            else whitenum += 1;
+        }
+    }
+
+    for (int i = 2; i < 6; i++){
+        if (taken[i*8+7] == 1){
+            if (black[i*8+7] == 1){
+                blacknum += 1;
+            }
+            else whitenum += 1;
+        }
+    }
+
     if (side == BLACK)  {
         return blacknum - whitenum;
     }

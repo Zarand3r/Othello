@@ -45,12 +45,6 @@ int Player::score(Move *m)  {
     Board *copy = board->copy();
     copy->doMove(m, side);
     int score = copy->getScore(side);
-    if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
-        score += 10;
-    }
-    else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
-        score -= 10; 
-    }
     delete copy;
     return score; 
 }
@@ -189,6 +183,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     //return randomMove(opponentsMove);
     //return greedyMove(opponentsMove);
+    Move* m = new Move(1, 1);
+    return m;
     return doMinimax(opponentsMove, msLeft);
     
         // Possible implementation for the minmax tree:
