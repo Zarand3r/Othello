@@ -62,26 +62,25 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     board->doMove(opponentsMove, other);
     if (board->hasMoves(side))    {
-        // We could iterate through all the empty squares, use the checkmove method
-        // of board class to see if the move is possible, calculate score, and 
-        // then pick the move that is the best score.
         int best = -100;
-        int bestx;
-        int besty; 
+        Move *temp = new Move(0, 0);
+        Move *bestMove = new Move (0, 0); 
         for (int x = 0; x < 8; x++)    {
             for (int y = 0; y < 8; y++) {
-                Move m(x, y);
-                int score = this->score(&m);
-                if (board->checkMove(&m, side) && score > best)  {
-                    best = score;
-                    bestx = m.getX();
-                    besty = m.getY();  
+                temp->setX(x);
+                temp->setY(y);
+                if (board->checkMove(temp, side))   {
+                    int score = this->score(temp);
+                    if (score > best)  {
+                        best = score;
+                        bestMove->setX(x);
+                        bestMove->setY(y);
+                    }
                 }
             }
         }
-        Move *bestmove = new Move(bestx, besty);
-        return bestmove; //need to delete this wherever it is used
-
+        delete temp;
+        return bestMove; //need to delete this wherever it is used
         // Possible implementation for the minmax tree:
         // A more efficient way would be to look at the stones we have, and explore
         // in all four directions. If there is a stone of the other side next to our stone,
