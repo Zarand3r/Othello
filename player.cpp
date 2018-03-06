@@ -45,12 +45,12 @@ int Player::score(Move *m)  {
     Board *copy = board->copy();
     copy->doMove(m, side);
     int score = copy->getScore(side);
-    if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
-        score += 3;
-    }
-    else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
-        score -= 3; 
-    }
+    // if (((m->getX() == 0) || (m->getX() == 7)) && ((m->getY() == 0) || (m->getY() == 7)))   {
+    //     score += 3;
+    // }
+    // else if (((m->getX() == 1) || (m->getX() == 6)) && ((m->getY() == 1) || (m->getY() == 6)))  {
+    //     score -= 3; 
+    // }
     delete copy;
     return score; 
 }
@@ -64,7 +64,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     if (board->hasMoves(side))    {
         int best = -100;
         Move *temp = new Move(0, 0);
-        Move *bestMove = new Move (0, 0); 
+        Move *bestMove = new Move(0, 0); 
         for (int x = 0; x < 8; x++)    {
             for (int y = 0; y < 8; y++) {
                 temp->setX(x);
