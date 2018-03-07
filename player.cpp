@@ -106,14 +106,15 @@ Move *Player::greedyMove(Move *opponentsMove)   {
 }
 
 int Player::minimax(Move* m, int depth, bool maximizingPlayer){
+    Side s;
+    if (maximizingPlayer) {
+        s = other;
+    }
+    else    {
+        s = side; 
+    }
+    
     if (depth == 0){
-        Side s;
-        if (maximizingPlayer) {
-            s = other;
-        }
-        else    {
-            s = side; 
-        }
         return this->score(m, s);
     }
 
@@ -161,7 +162,7 @@ int Player::minimax(Move* m, int depth, bool maximizingPlayer){
             return best;
         }
     }
-    //return this->score(m, s);
+    return this->score(m, s);
 }
 
 Move *Player::doMinimax(Move *opponentsMove, int msLeft){
