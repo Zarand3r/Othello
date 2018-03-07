@@ -9,15 +9,15 @@ using namespace std;
 class Player {
 
 private:
-	Board *board; 
 	Side side; 
 	Side other;
 
 public:
+	Board *board; 
     Player(Side side);
     ~Player();
 
-    int score(Move *m);
+    int score(Move *m, Side s);
     Move *randomMove(Move *opponentsMove);
     Move *greedyMove(Move *opponentsMove);
     int minimax(Move * m, int depth, bool maximizingPlayer);
