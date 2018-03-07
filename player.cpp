@@ -105,7 +105,7 @@ Move *Player::greedyMove(Move *opponentsMove)   {
     return nullptr;
 }
 
-int Player::minimax(Move* m, int depth, bool maximizingPlayer){
+int Player::minimax(Board *copy, Move* m, int depth, bool maximizingPlayer){
     Side s;
     if (maximizingPlayer) {
         s = other;
@@ -119,46 +119,41 @@ int Player::minimax(Move* m, int depth, bool maximizingPlayer){
     }
 
     int best;
-    Board * copy = board->copy();
-
     //unnecessary unless tree is deeper than 2-ply, as this part is done in doMinimax
     if (maximizingPlayer){
-        board->doMove(m, other);
-        if (board->hasMoves(side)){
+        copy->doMove(m, other);
+        if (copy->hasMoves(side)){
             best = -1000;
             Move *temp = new Move(0, 0);
             for (int x = 0; x < 8; x++)    {
                 for (int y = 0; y < 8; y++) {
                     temp->setX(x);
                     temp->setY(y);
-                    if (board->checkMove(temp, side)){
-                        int score = this->minimax(temp, depth-1, false);
+                    if (copy->checkMove(temp, side)){
+                        int score = this->minimax(copy, temp, depth-1, false);
                         best = max(best, score);
                     }
                 }
             }
-            board = copy;
-            delete copy;
             return best;
         }
     }
 
     else{
-        board->doMove(m, side);
-        if (board->hasMoves(other)){
+        copy->doMove(m, side);
+        if (copy->hasMoves(other)){
             best = 1000;
             Move *temp = new Move(0, 0);
             for (int x = 0; x < 8; x++)    {
                 for (int y = 0; y < 8; y++) {
                     temp->setX(x);
                     temp->setY(y);
-                    if (board->checkMove(temp, other)){
-                        int score = this->minimax(temp, depth-1, true);
+                    if (copy->checkMove(temp, other)){
+                        int score = this->minimax(copy, temp, depth-1, true);
                         best = min(best, score);
                     }
                 }
             }
-            board = copy;
             return best;
         }
     }
@@ -166,6 +161,7 @@ int Player::minimax(Move* m, int depth, bool maximizingPlayer){
 }
 
 Move *Player::doMinimax(Move *opponentsMove, int msLeft){
+    Board * copy = board->copy();
     board->doMove(opponentsMove, other);
     if (board->hasMoves(side)){
         int best = -1000;
@@ -176,7 +172,7 @@ Move *Player::doMinimax(Move *opponentsMove, int msLeft){
                 temp->setX(x);
                 temp->setY(y);
                 if (board->checkMove(temp, side)){
-                    int score = this->minimax(temp, 1, false);
+                    int score = this->minimax(copy, temp, 7, false);
                     if (score > best)  {
                         best = score;
                         bestMove->setX(x);

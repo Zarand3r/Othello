@@ -20,7 +20,7 @@ public:
     int score(Move *m, Side s);
     Move *randomMove(Move *opponentsMove);
     Move *greedyMove(Move *opponentsMove);
-    int minimax(Move * m, int depth, bool maximizingPlayer);
+    int minimax(Board *copy, Move * m, int depth, bool maximizingPlayer);
     Move *doMinimax(Move * opponentsMove, int msLeft);
     Move *doMove(Move *opponentsMove, int msLeft);
 
